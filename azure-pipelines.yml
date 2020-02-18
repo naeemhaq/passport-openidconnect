@@ -10,6 +10,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarQube'
+    organization: 'nqtech'
+    scannerMode: 'Other'
+
+- task: SonarCloudAnalyze@1
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
@@ -19,7 +27,9 @@ steps:
     npm install
     npm pack
   displayName: 'npm install and pack'
-
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Pipeline.Workspace)'
